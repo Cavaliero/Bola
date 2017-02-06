@@ -21,16 +21,19 @@ var app={
       game.stage.backgroundColor = '#f27d0c';
       game.load.image('bola', 'assets/bola.png');
       game.load.image('objetivo', 'assets/objetivo.png');
+      game.load.image('objetivo2', 'assets/objetivo2.png');
     }
 
     function create() {
       scoreText = game.add.text(16, 16, puntuacion, { fontSize: '100px', fill: '#757676' });
       
       objetivo = game.add.sprite(app.inicioX(), app.inicioY(), 'objetivo');
+      objetivo2 = game.add.sprite(app.inicioX(), app.inicioY(), 'objetivo2');
       bola = game.add.sprite(app.inicioX(), app.inicioY(), 'bola');
       
       game.physics.arcade.enable(bola);
       game.physics.arcade.enable(objetivo);
+      game.physics.arcade.enable(objetivo2);
 
       bola.body.collideWorldBounds = true;
       bola.body.onWorldBounds = new Phaser.Signal();
@@ -43,10 +46,16 @@ var app={
       bola.body.velocity.x = (velocidadX * (-1 * factorDificultad));
       
       game.physics.arcade.overlap(bola, objetivo, app.incrementaPuntuacion, null, this);
+      game.physics.arcade.overlap(bola, objetivo2, app.incrementaPuntuacionPlus, null, this);
     }
 
     var estados = { preload: preload, create: create, update: update };
     var game = new Phaser.Game(ancho, alto, Phaser.CANVAS, 'phaser',estados);
+  },
+
+
+  cambiaFondo: function(){
+    game.stage.backgroundColor = '#800909';
   },
 
   decrementaPuntuacion: function(){
@@ -60,6 +69,18 @@ var app={
 
     objetivo.body.x = app.inicioX();
     objetivo.body.y = app.inicioY();
+
+    if (puntuacion > 0){
+      dificultad = dificultad + 1;
+    }
+  },
+
+  incrementaPuntuacionPlus: function(){
+    puntuacion = puntuacion+10;
+    scoreText.text = puntuacion;
+
+    objetivo2.body.x = app.inicioX();
+    objetivo2.body.y = app.inicioY();
 
     if (puntuacion > 0){
       dificultad = dificultad + 1;
